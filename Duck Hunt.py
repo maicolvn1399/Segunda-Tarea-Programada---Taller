@@ -97,10 +97,7 @@ def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a):
                playShot()
                Delete()
 
-               
-        canvas.tag_bind("bola","<Button-1>",clickedBall)#reconoce el click de la 
-
-        
+        canvas.tag_bind("bola","<Button-1>",clickedBall)#reconoce el click de la
 
 
         return AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a)
