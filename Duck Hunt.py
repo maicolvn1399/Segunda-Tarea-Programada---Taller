@@ -97,7 +97,7 @@ def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a):
                playShot()
                Delete()
 
-        canvas.tag_bind("bola","<Button-1>",clickedBall)#reconoce el click de la
+        canvas.tag_bind(bola,"<Button-1>",clickedBall)#reconoce el click de la
 
 
         return AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a)
@@ -129,7 +129,7 @@ def VentanaJuego(nombre,cantidadBolas):
          y = random.randrange(0,400) #posicion en el eje y 
          randomColor = random.choice(colores) #elige un color de la lista aleatorio
          
-         bola=canvasJuego.create_oval(x,y,x+50,y+50,fill=randomColor,tags="bola") #crea la bola
+         bola=canvasJuego.create_oval(x,y,x+50,y+50,fill=randomColor) #crea la bola
          bola_thread = Thread(target= AnimacionRecursiva,args = (canvasJuego,bola,velocidadx,velocidady,ventanaJuego))
          bola_thread.daemon = True
          bola_thread.start()
