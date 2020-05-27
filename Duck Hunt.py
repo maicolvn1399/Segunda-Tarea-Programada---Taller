@@ -54,7 +54,6 @@ def DatosIngresados(nombre,cantidadBolas):
           return messagebox.showerror("Error","Los datos ingresados son incorrectos")
 
 
-
 def DatosJugador():
      #Aparece la primera pantalla del juego
      ventanaDatos = Tk()
@@ -78,7 +77,8 @@ def DatosJugador():
      buttonAceptar.place(x=200,y=300) 
      ventanaDatos.mainloop()
 
-def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a):
+clickcounter = 0
+def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas):
         canvas.move(bola,velocidadx,velocidady)
         posicion=canvas.coords(bola) #toma la posición actual de la bola
         if posicion[3]>=400 or posicion[1]<=0:
@@ -87,20 +87,40 @@ def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a):
             velocidadx=-velocidadx
         a.update()
         time.sleep(0.025)#comando que retarda el programa
-        
+
         def Delete():
              canvas.delete(bola)
 
 
-        def clickedBall(*args):
+        def clickedBall(event,counter):
+##               global clickcounter
+##               clickcounter += 1
+##               print(clickcounter)
+               if countClicks(counter) == cantidadBolas:
+                    return VentanaJuego("d",cantidadBolas)
+               #print(countClicks(counter))
                print("Ball clicked")
                playShot()
                Delete()
+               
 
-        canvas.tag_bind(bola,"<Button-1>",clickedBall)#reconoce el click de la
+        def clickedCanvas(*args):
+             print("Canvas click")
+
+        def countClicks(counter):
+             global clickcounter
+             clickcounter += 1
+             return clickcounter
 
 
-        return AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a)
+
+        canvas.tag_bind(bola,"<Button-1>",lambda event : clickedBall(event,1))#reconoce el click de la
+        #canvas.tag_bind("p","<Button-1>",clickedCanvas)
+
+
+        return AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas)
+
+
 
 
 def VentanaJuego(nombre,cantidadBolas):
@@ -109,7 +129,7 @@ def VentanaJuego(nombre,cantidadBolas):
     MusicaFondo = Thread(target= PlayMusic)
     MusicaFondo.daemon = True
     MusicaFondo.start()
-    ventanaJuego.minsize(800,400)# tamaño de ventana
+    ventanaJuego.minsize(800,510)# tamaño de ventana
     ventanaJuego.resizable(width=NO,height=NO)
     ventanaJuego.title("Juego")
     imagenFondo = cargarImagen("gameBackground1.gif")
@@ -118,6 +138,10 @@ def VentanaJuego(nombre,cantidadBolas):
     LabelFondo.image = imagenFondo
     
     canvasJuego = Canvas(ventanaJuego, width=800, height=400,bg="#326fa8")#contenedor de la bola
+    canvasJuego.place(x=0,y=0)
+
+    canvasInformacion = Canvas(ventanaJuego, width=800, height=100,bg="#8b32a8")
+    canvasInformacion.place(x=0,y=405)
     
     canvasJuego.grid()# divide la pantalla
 
@@ -130,7 +154,7 @@ def VentanaJuego(nombre,cantidadBolas):
          randomColor = random.choice(colores) #elige un color de la lista aleatorio
          
          bola=canvasJuego.create_oval(x,y,x+50,y+50,fill=randomColor) #crea la bola
-         bola_thread = Thread(target= AnimacionRecursiva,args = (canvasJuego,bola,velocidadx,velocidady,ventanaJuego))
+         bola_thread = Thread(target= AnimacionRecursiva,args = (canvasJuego,bola,velocidadx,velocidady,ventanaJuego,cantidadBolas))
          bola_thread.daemon = True
          bola_thread.start()
 
@@ -144,6 +168,8 @@ def playShot(*args):
      pygame.mixer.music.load(os.path.join('Multimedia',"shot.wav")) #Carga el archivo de audio para ser reproducido 
      pygame.mixer.music.play() #Reproduce el archivo
 
+
+     
 
 
 
