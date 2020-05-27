@@ -38,8 +38,10 @@ def cargarImagen(nombre):
 
 def PlayMusic():
      pygame.mixer.init()#inicializa la función para reproducir archivos de audio
-     pygame.mixer.music.load(os.path.join('Multimedia',"backgroundMusic.wav")) #Carga el archivo de audio para ser reproducido 
-     pygame.mixer.music.play(loops=-1) #Reproduce el archivo
+     pygame.mixer.Channel(0).play(pygame.mixer.Sound('backgroundMusic.wav'))
+     
+     #pygame.mixer.music.load(os.path.join('Multimedia',"backgroundMusic.wav")) #Carga el archivo de audio para ser reproducido 
+     #pygame.mixer.music.play(loops=-1) #Reproduce el archivo
      
 
 
@@ -127,9 +129,7 @@ def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas,nombre)
 def VentanaJuego(nombre,cantidadBolas,nivel):
      
     ventanaJuego=Toplevel()#crea una ventana
-    MusicaFondo = Thread(target= PlayMusic)
-    MusicaFondo.daemon = True
-    MusicaFondo.start()
+    PlayMusic()
     ventanaJuego.minsize(800,510)# tamaño de ventana
     ventanaJuego.resizable(width=NO,height=NO)
     ventanaJuego.title("Juego")
@@ -137,8 +137,11 @@ def VentanaJuego(nombre,cantidadBolas,nivel):
     LabelFondo = Label(ventanaJuego, image=imagenFondo)
     LabelFondo.place(x=0,y=0,relwidth=1,height=1)
     LabelFondo.image = imagenFondo
+
+    
     
     canvasJuego = Canvas(ventanaJuego, width=800, height=400,bg="#326fa8")#contenedor de la bola
+
     canvasJuego.place(x=0,y=0)
 
     canvasInformacion = Canvas(ventanaJuego, width=800, height=100,bg="#8b32a8")
@@ -172,12 +175,9 @@ def VentanaJuego(nombre,cantidadBolas,nivel):
 
 def playShot(*args):
      pygame.mixer.init()#inicializa la función para reproducir archivos de audio
-     pygame.mixer.music.load(os.path.join('Multimedia',"shot.wav")) #Carga el archivo de audio para ser reproducido 
-     pygame.mixer.music.play() #Reproduce el archivo
-
-
-     
-
+     #pygame.mixer.music.load(os.path.join('Multimedia',"shot.wav")) #Carga el archivo de audio para ser reproducido 
+     #pygame.mixer.music.play() #Reproduce el archivo
+     pygame.mixer.Channel(1).play(pygame.mixer.Sound('shot.wav'))
 
 
 def ventanaGameOver():
