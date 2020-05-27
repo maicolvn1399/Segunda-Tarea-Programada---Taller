@@ -47,7 +47,7 @@ def PlayMusic():
 def DatosIngresados(nombre,cantidadBolas):
      if isinstance(nombre,str) and isinstance(cantidadBolas,str):
           if cantidadBolas.isdigit() and int(cantidadBolas) != 0:
-               return VentanaJuego(nombre,int(cantidadBolas))
+               return VentanaJuego(nombre,int(cantidadBolas),"1")
           else:
                return messagebox.showerror("Error","Debe ingresar un número válido")
      else:
@@ -78,7 +78,7 @@ def DatosJugador():
      ventanaDatos.mainloop()
 
 clickcounter = 0
-def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas):
+def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas,nombre):
         canvas.move(bola,velocidadx,velocidady)
         posicion=canvas.coords(bola) #toma la posición actual de la bola
         if posicion[3]>=400 or posicion[1]<=0:
@@ -96,12 +96,13 @@ def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas):
 ##               global clickcounter
 ##               clickcounter += 1
 ##               print(clickcounter)
-               if countClicks(counter) == cantidadBolas:
-                    return VentanaJuego("d",cantidadBolas)
-               #print(countClicks(counter))
-               print("Ball clicked")
                playShot()
                Delete()
+               if countClicks(counter) == cantidadBolas:
+                    return VentanaJuego(nombre,cantidadBolas,"2")
+               #print(countClicks(counter))
+               print("Ball clicked")
+               
                
 
         def clickedCanvas(*args):
@@ -118,12 +119,12 @@ def AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas):
         #canvas.tag_bind("p","<Button-1>",clickedCanvas)
 
 
-        return AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas)
+        return AnimacionRecursiva(canvas,bola,velocidadx,velocidady,a,cantidadBolas,nombre)
 
 
 
 
-def VentanaJuego(nombre,cantidadBolas):
+def VentanaJuego(nombre,cantidadBolas,nivel):
      
     ventanaJuego=Toplevel()#crea una ventana
     MusicaFondo = Thread(target= PlayMusic)
@@ -142,6 +143,12 @@ def VentanaJuego(nombre,cantidadBolas):
 
     canvasInformacion = Canvas(ventanaJuego, width=800, height=100,bg="#8b32a8")
     canvasInformacion.place(x=0,y=405)
+
+    labelJugador = Label(canvasInformacion, text="Jugador: "+nombre.capitalize(), font=("Fixedsys", 25), bg="#8b32a8")
+    labelJugador.place(x=2,y=15)
+    labelNivel = Label(canvasInformacion, text="Nivel: "+nivel, font=("Fixedsys", 25), bg="#8b32a8")
+    labelNivel.place(x=550,y=15)
+    
     
     canvasJuego.grid()# divide la pantalla
 
@@ -154,7 +161,7 @@ def VentanaJuego(nombre,cantidadBolas):
          randomColor = random.choice(colores) #elige un color de la lista aleatorio
          
          bola=canvasJuego.create_oval(x,y,x+50,y+50,fill=randomColor) #crea la bola
-         bola_thread = Thread(target= AnimacionRecursiva,args = (canvasJuego,bola,velocidadx,velocidady,ventanaJuego,cantidadBolas))
+         bola_thread = Thread(target= AnimacionRecursiva,args = (canvasJuego,bola,velocidadx,velocidady,ventanaJuego,cantidadBolas,nombre))
          bola_thread.daemon = True
          bola_thread.start()
 
